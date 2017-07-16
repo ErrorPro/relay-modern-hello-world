@@ -5,7 +5,9 @@
   "dependencies": {
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "react-relay": "1.0.0-rc3"
+    "react-relay": "1.1.0",
+    "redux": "^3.7.2",
+    "relay-compose": "^1.0.4"
   },
   "devDependencies": {
     "autoprefixer": "6.7.2",
@@ -13,7 +15,7 @@
     "babel-eslint": "7.1.1",
     "babel-jest": "18.0.0",
     "babel-loader": "6.2.10",
-    "babel-plugin-relay": "1.0.0-rc3",
+    "babel-plugin-relay": "1.1.0",
     "babel-preset-react-app": "^2.2.0",
     "babel-runtime": "^6.20.0",
     "case-sensitive-paths-webpack-plugin": "1.1.4",
@@ -42,7 +44,7 @@
     "postcss-loader": "1.2.2",
     "promise": "7.1.1",
     "react-dev-utils": "^0.5.2",
-    "relay-compiler": "1.0.0-rc3",
+    "relay-compiler": "1.1.0",
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
     "webpack": "1.14.0",

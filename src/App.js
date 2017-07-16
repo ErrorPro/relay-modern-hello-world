@@ -1,47 +1,54 @@
 import React, { Component } from 'react';
+import { compose } from 'redux';
 
 import {
-  QueryRenderer,
   graphql
 } from 'react-relay';
+import { queryRenderer, refetchContainer } from 'relay-compose';
 
-import environment from './createRelayEnvironment';
-import Feed from './Feed';
+const Feeds = (props) => (console.log(props),
+  <div>
+    Feeds:
+    <div>
+      {props.viewer && props.viewer.feed.edges.map(e => (
+        <div key={e.node.id}>{e.node.id}</div>
+      ))}
+    </div>
+    <button onClick={() => props.relay.refetch((vars) => ({ first: vars.first + 5 }), null)}> More + 5</button>
+  </div>
+);
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <h2>Tiny GitHunt</h2>
-        <QueryRenderer
-          environment={environment}
-
-          query={graphql`
-            query AppFeedQuery {
-              feed (type: NEW, limit: 5) {
-                ...Feed
+export default compose(
+  queryRenderer(graphql`
+    query App_Query {
+      viewer {
+        ...App_feed
+      }
+    }
+  `),
+  refetchContainer(
+    {
+      viewer: graphql.experimental`
+          fragment App_feed on Viewer
+          @argumentDefinitions(
+            first: {type: Int, defaultValue: 10}
+          ) {
+            feed(first: $first) {
+              edges {
+                node {
+                  id
+                }
               }
             }
-          `}
-
-          render={({error, props}) => {
-            if (error) {
-              return <div>{error.message}</div>;
-            } else if (props) {
-              console.log(props.feed);
-              return <Feed data={props.feed} />;
-            }
-            return <div>Loading</div>;
-          }}
-        />
-        <h3>More info</h3>
-        <ul>
-          <li><a href="http://www.githunt.com/">Full GitHunt App</a></li>
-          <li><a href="https://github.com/stubailo/relay-modern-hello-world">Improve this example on GitHub</a></li>
-        </ul>
-      </div>
-    );
-  }
-}
-
-export default App;
+          }
+        `,
+      },
+      graphql.experimental`
+        query AppRefetch_Query($first: Int) {
+          viewer {
+            ...App_feed @arguments(first: $first)
+          }
+        }
+      `
+  )
+)(Feeds);

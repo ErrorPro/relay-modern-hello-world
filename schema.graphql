@@ -16,6 +16,36 @@ type Comment {
   repoName: String!
 }
 
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+type FeedConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [FeedEdge]
+}
+
+type FeedEdge {
+  # The item at the end of the edge.
+  node: Entry
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
 # Information about a GitHub repository submitted to GitHunt
 type Entry {
   # Information about the repository from GitHub
@@ -40,7 +70,7 @@ type Entry {
   commentCount: Int!
 
   # The SQL ID of this entry
-  id: Int!
+  id: String!
 
   # XXX to be changed
   vote: Vote!
@@ -84,18 +114,17 @@ type Mutation {
   ): Comment
 }
 
+type Viewer {
+	feed(first: Int): FeedConnection
+}
+
 type Query {
+  viewer: Viewer
   # A feed of repository submissions
   feed(
-    # The sort order for the feed
-    type: FeedType!
-
     # The number of items to skip, for pagination
-    offset: Int
-
-    # The number of items to fetch starting from the offset, for pagination
-    limit: Int
-  ): [Entry]
+    first: Int
+  ): FeedConnection
 
   # A single entry
   entry(

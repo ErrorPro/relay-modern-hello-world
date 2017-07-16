@@ -13,7 +13,7 @@ function fetchQuery(
   cacheConfig,
   uploadables,
 ) {
-  return fetch('http://api.githunt.com/graphql', {
+  return fetch('https://7j7j9vjnj.lp.gql.zone/graphql', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -23,8 +23,11 @@ function fetchQuery(
       query: operation.text, // GraphQL text from input
       variables,
     }),
-  }).then(response => {
-    return response.json();
+  }).then(async (response) => {
+    const res = await response.json();
+    console.log(res)
+
+    return res
   });
 }
 
